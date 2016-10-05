@@ -37,6 +37,10 @@
 
 <script type="text/javascript">
 
+// colors
+let color = false;
+const colors = d3.scaleOrdinal(d3.schemeCategory10);
+
 d3.json('./emojis.json', (jsonData) => {
 
   // parse data
@@ -45,7 +49,11 @@ d3.json('./emojis.json', (jsonData) => {
 
   // display raw values
   let raw = d3.select("#raw").append("p")
-  glyphs.forEach( d => raw.append("span").text( " " + d[0] +" - " + d[1]) )
+  glyphs.forEach( d =>
+    raw.append("span")
+        .style("color", colors(d[0]) )
+        .text( d[0] + d[1] + "\t" )
+      )
 
   // compute doc width
   const w = document.getElementById("main").offsetWidth,
@@ -89,10 +97,12 @@ function treemap(glyphs, w, h) {
   data.forEach( (glyph,i) => {
     tree.append("text")
       .text(glyph)
+      .style("fill", d => colors(glyph) )
       .attr("width", glyphWidth)
       .attr("y", i%fillHeight * glyphWidth )
       .attr("x", Math.floor(i/fillHeight)*glyphWidth )
   })
+
 }
 
 // columns viz
@@ -115,6 +125,7 @@ function columns(glyphs, w, h) {
       .style("width", w/glyphs.length)
 
 
+
     // number of glyphs per column
     let glyphWidth = 20
     let fillHeight = h/glyphWidth
@@ -123,6 +134,7 @@ function columns(glyphs, w, h) {
       col.append("text")
         .text(d[0])
         .attr("width", glyphWidth)
+        .style("fill", colors(d[0]) )
         .attr("y", j%fillHeight * glyphWidth )
         .attr("x", i*100 + glyphWidth * Math.floor(j/fillHeight))
     }
@@ -140,6 +152,7 @@ function circles(glyphs, w, h) {
     circles.append("text")
       .text(d[0])
       .style("font-size", d[1])
+      .style("fill", colors(d[0]) )
       .attr("x", i * w/glyphs.length )
       .attr("y", 100)
   )
