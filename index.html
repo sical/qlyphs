@@ -1,2 +1,148 @@
 <!doctype html>
-<h1>Hello Qlyphs</h1>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Qlyphs</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css" media="screen" title="no title">
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+</head>
+
+
+<div id="main" class="container">
+  <h1>Qlyphs</h1>
+  <h4>Investigating the Design Space of <em>Quantified</em> Glyphs</h4>
+
+  <div id="raw"></div>
+
+  <hr>
+  <h3>Glyphs in treemap</h3>
+
+  <div id="treemap"></div>
+
+  <hr>
+  <h3>Glyphs in columns</h3>
+
+  <div id="columns"></div>
+
+  <hr>
+  <h3>Glyphs circles</h3>
+  <div id="circles"></div>
+
+</div>
+
+<!-- js   -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.6/d3.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+d3.json('./emojis.json', (jsonData) => {
+
+  // parse data
+  let glyphs = jsonData.map( d => [ d.glyph, Math.floor(Math.random()*100)+1 ]) // add random value btw 1 and 100 for testing purposes
+  console.log(glyphs)
+
+  // display raw values
+  let raw = d3.select("#raw").append("p")
+  glyphs.forEach( d => raw.append("span").text( " " + d[0] +" - " + d[1]) )
+
+  // compute doc width
+  const w = document.getElementById("main").offsetWidth,
+    h = 400
+  console.log(w, h)
+
+  columns(glyphs, w, h)
+  circles(glyphs, w, h)
+  treemap(glyphs, w, h)
+
+})
+
+//treemap
+function treemap(glyphs, w, h) {
+
+  const margin = { top: 30, right: 20, bottom: 30, left: 50 }
+
+  // treemap
+  let treemap = d3.select("#treemap")
+    .append("svg")
+    .attr("width", w + margin.left + margin.right)
+    .attr("height", h + margin.top + margin.bottom)
+
+  let data = []
+
+  glyphs.forEach( d => new Array( d[1] ).fill( d[0] ).forEach( e => data.push(e) ) )
+
+  // make sure data contains the right total of points
+  console.assert(data.length == glyphs.map( d => d[1] ).reduce( (pv, cv) => pv+cv, 0) )
+  // console.log(data.length, glyphs.map( d => d[1] ).reduce( (pv, cv) => pv+cv, 0) )
+
+  let tree = treemap
+    .append("g")
+     .attr("transform", "translate(" + margin.left + "," + margin.top + ")" )
+
+
+  // number of glyphs per column
+  let glyphWidth = 25
+  let fillHeight = h/glyphWidth
+
+  data.forEach( (glyph,i) => {
+    tree.append("text")
+      .text(glyph)
+      .attr("width", glyphWidth)
+      .attr("y", i%fillHeight * glyphWidth )
+      .attr("x", Math.floor(i/fillHeight)*glyphWidth )
+  })
+}
+
+// columns viz
+function columns(glyphs, w, h) {
+
+  const margin = { top: 30, right: 20, bottom: 30, left: 50 }
+
+  let columns = d3.select("#columns")
+    .append("svg")
+      .attr("width", w + margin.left + margin.right)
+      .attr("height", h + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")" )
+
+  glyphs.forEach( (d,i) => {
+
+    let col = columns
+      .append("g")
+      .attr("class", "column")
+      .style("width", w/glyphs.length)
+
+
+    // number of glyphs per column
+    let glyphWidth = 20
+    let fillHeight = h/glyphWidth
+
+    for (let j of Array(d[1]).keys()) {
+      col.append("text")
+        .text(d[0])
+        .attr("width", glyphWidth)
+        .attr("y", j%fillHeight * glyphWidth )
+        .attr("x", i*100 + glyphWidth * Math.floor(j/fillHeight))
+    }
+  })
+}
+
+// circles
+function circles(glyphs, w, h) {
+  let circles = d3.select("#circles")
+    .append("svg")
+    .attr("width", w)
+    .attr("height", 200)
+
+  glyphs.forEach( (d, i) =>
+    circles.append("text")
+      .text(d[0])
+      .style("font-size", d[1])
+      .attr("x", i * w/glyphs.length )
+      .attr("y", 100)
+  )
+}
+
+</script>

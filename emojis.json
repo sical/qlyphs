@@ -1,0 +1,35 @@
+[
+{
+"unicode" : "U+1F600",
+"caption" : "GRINNING FACE (U+1F600)",
+"glyph" : "😀"
+}, {
+"unicode" : "U+1F603",
+"caption" : "SMILING FACE WITH OPEN MOUTH (U+1F603)",
+"glyph" : "😃"
+}, {
+"unicode" : "U+1F609",
+"caption" : "WINKING FACE (U+1F609)",
+"glyph" : "😉"
+}, {
+"unicode" : "U+1F610",
+"caption" : "NEUTRAL FACE (U+1F610)",
+"glyph" : "😐"
+}, {
+"unicode" : "U+1F615",
+"caption" : "CONFUSED FACE (U+1F615)",
+"glyph" : "😕"
+}, {
+"unicode" : "U+1F61E",
+"caption" : "DISAPPOINTED FACE (U+1F61E)",
+"glyph" : "😞"
+}, {
+"unicode" : "U+1F622",
+"caption" : "CRYING FACE (U+1F622)",
+"glyph" : "😢"
+}, {
+"unicode" : "U+1F620",
+"caption" : "ANGRY FACE (U+1F620)",
+"glyph" : "😠"
+}
+]
